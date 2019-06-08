@@ -32,6 +32,24 @@ mod weight_for_weight {
         result.pop();
         result
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn testing(s: &str, exp: &str) -> () {
+            assert_eq!(order_weight(s), exp)
+        }
+
+        #[test]
+        fn basics_order_weight() {
+            testing("103 123 4444 99 2000", "2000 103 123 4444 99");
+            testing(
+                "2000 10003 1234000 44444444 9999 11 11 22 123",
+                "11 11 2000 10003 22 123 1234000 44444444 9999",
+            );
+        }
+    }
 }
 
 mod camel_case_method {
@@ -51,6 +69,20 @@ mod camel_case_method {
             })
             .collect()
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn sample_test() {
+            assert_eq!(camel_case("test case"), "TestCase");
+            assert_eq!(camel_case("camel case method"), "CamelCaseMethod");
+            assert_eq!(camel_case("say hello "), "SayHello");
+            assert_eq!(camel_case(" camel case word"), "CamelCaseWord");
+            assert_eq!(camel_case(""), "");
+        }
+    }
 }
 
 mod prize_draw {
@@ -69,7 +101,6 @@ mod prize_draw {
         if n > names.len() {
             return "Not enough participants";
         }
-
 
         let mut rankings: Vec<(i32, &str)> = names
             .iter()
@@ -102,10 +133,41 @@ mod prize_draw {
         });
         sum + name.len() as i32
     }
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn testing(st: &str, we: Vec<i32>, n: usize, exp: &str) -> () {
+            assert_eq!(rank(st, we, n), exp)
+        }
+
+        #[test]
+        fn basics_rank() {
+            testing(
+                "Addison,Jayden,Sofia,Michael,Andrew,Lily,Benjamin",
+                vec![4, 2, 1, 4, 3, 1, 2],
+                4,
+                "Benjamin",
+            );
+            testing(
+                "Elijah,Chloe,Elizabeth,Matthew,Natalie,Jayden",
+                vec![1, 3, 5, 5, 3, 6],
+                2,
+                "Matthew",
+            );
+            testing(
+                "Aubrey,Olivai,Abigail,Chloe,Andrew,Elizabeth",
+                vec![3, 1, 4, 4, 3, 2],
+                4,
+                "Abigail",
+            );
+            testing("Lagon,Lily", vec![1, 5], 2, "Lagon");
+        }
+    }
 }
 
 mod directions_reduction {
-    #[derive(Clone, PartialEq)]
+    #[derive(Clone, PartialEq, Debug)]
     enum Direction {
         NORTH,
         SOUTH,
@@ -150,6 +212,20 @@ mod directions_reduction {
         //  - current index points to array's last element
         len == 0 || len == 1 || i == len - 1
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        #[test]
+        fn returns_expected() {
+            use Direction::*;
+            let a = [NORTH, SOUTH, SOUTH, EAST, WEST, NORTH, WEST];
+            assert_eq!(dir_reduc(&a), [WEST]);
+            let a = [NORTH, WEST, SOUTH, EAST];
+            assert_eq!(dir_reduc(&a), [NORTH, WEST, SOUTH, EAST]);
+        }
+    }
 }
 
 mod bankers_plan {
@@ -165,6 +241,23 @@ mod bankers_plan {
             let inflation = (i / 100.0) * c0 as f64;
             let c_n = c0 + inflation as i32;
             fortune(f_n, p, c_n, n - 1, i)
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn testequal(f0: i32, p: f64, c0: i32, n: i32, i: f64, exp: bool) -> () {
+            assert_eq!(exp, fortune(f0, p, c0, n, i))
+        }
+
+        #[test]
+        fn basics() {
+            testequal(100000, 1.0, 2000, 15, 1.0, true);
+            testequal(100000, 1.0, 9185, 12, 1.0, false);
+            testequal(100000000, 1.0, 100000, 50, 1.0, true);
+            testequal(100000000, 1.5, 10000000, 50, 1.0, false);
         }
     }
 }
@@ -215,6 +308,60 @@ mod catalog {
             }
         }
     }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn s() -> String {
+            let a: Vec<&str> = vec![
+                "<prod><name>drill</name><prx>99</prx><qty>5</qty></prod>",
+                "<prod><name>hammer</name><prx>10</prx><qty>50</qty></prod>",
+                "<prod><name>screwdriver</name><prx>5</prx><qty>51</qty></prod>",
+                "<prod><name>table saw</name><prx>1099.99</prx><qty>5</qty></prod>",
+                "<prod><name>saw</name><prx>9</prx><qty>10</qty></prod>",
+                "<prod><name>chair</name><prx>100</prx><qty>20</qty></prod>",
+                "<prod><name>fan</name><prx>50</prx><qty>8</qty></prod>",
+                "<prod><name>wire</name><prx>10.8</prx><qty>15</qty></prod>",
+                "<prod><name>battery</name><prx>150</prx><qty>12</qty></prod>",
+                "<prod><name>pallet</name><prx>10</prx><qty>50</qty></prod>",
+                "<prod><name>wheel</name><prx>8.80</prx><qty>32</qty></prod>",
+                "<prod><name>extractor</name><prx>105</prx><qty>17</qty></prod>",
+                "<prod><name>bumper</name><prx>150</prx><qty>3</qty></prod>",
+                "<prod><name>ladder</name><prx>112</prx><qty>12</qty></prod>",
+                "<prod><name>hoist</name><prx>13.80</prx><qty>32</qty></prod>",
+                "<prod><name>platform</name><prx>65</prx><qty>21</qty></prod>",
+                "<prod><name>car wheel</name><prx>505</prx><qty>7</qty></prod>",
+                "<prod><name>bicycle wheel</name><prx>150</prx><qty>11</qty></prod>",
+                "<prod><name>big hammer</name><prx>18</prx><qty>12</qty></prod>",
+                "<prod><name>saw for metal</name><prx>13.80</prx><qty>32</qty></prod>",
+                "<prod><name>wood pallet</name><prx>65</prx><qty>21</qty></prod>",
+                "<prod><name>circular fan</name><prx>80</prx><qty>8</qty></prod>",
+                "<prod><name>exhaust fan</name><prx>62</prx><qty>8</qty></prod>",
+                "<prod><name>window fan</name><prx>62</prx><qty>8</qty></prod>",
+            ];
+            return a.join("\n\n");
+        }
+
+        fn dotest(s: &str, article: &str, exp: &str) -> () {
+            println!("s:{:?}", s);
+            println!("article:{:?}", article);
+            let ans = catalog(s, article);
+            println!("actual: {:?}", ans);
+            println!("expect: {:?}", exp);
+            println!("{}", ans == exp);
+            assert_eq!(ans, exp);
+            println!("{}", "-");
+        }
+
+        #[test]
+        fn basic_tests() {
+            let s = &s();
+            dotest(s, "ladder", "ladder > prx: $112 qty: 12");
+            dotest(s, "ladder", "ladder > prx: $112 qty: 12");
+        }
+    }
+
 }
 
 mod two_to_one {
@@ -241,6 +388,28 @@ mod two_to_one {
         });
 
         s.collect()
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        fn testing(s1: &str, s2: &str, exp: &str) -> () {
+            println!("s1:{:?} s2:{:?}", s1, s2);
+            println!("{:?} {:?}", longest(s1, s2), exp);
+            println!("{}", longest(s1, s2) == exp);
+            assert_eq!(&longest(s1, s2), exp)
+        }
+
+        #[test]
+        fn basic_tests() {
+            testing("aretheyhere", "yestheyarehere", "aehrsty");
+            testing(
+                "loopingisfunbutdangerous",
+                "lessdangerousthancoding",
+                "abcdefghilnoprstu",
+            );
+        }
     }
 }
 
