@@ -9,3 +9,6 @@ mod how_green_is_my_valley;
 mod reducing_by_steps;
 mod bouncing_balls;
 mod multiply;
+mod zoom_pattern;
+mod vectors_calculator;
+mod morse_code;
