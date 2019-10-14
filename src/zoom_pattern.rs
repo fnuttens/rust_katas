@@ -10,7 +10,7 @@ enum Color {
 fn zoom(n: i32) -> String {
     zoom_recur(Vec::with_capacity(n as usize), n as usize)
         .iter()
-        .map(|row| convert_colors(row))
+        .map(convert_colors)
         .collect::<Vec<Vec<char>>>()
         .join(&'\n')
         .iter()
