@@ -12,3 +12,4 @@ mod multiply;
 mod zoom_pattern;
 mod vectors_calculator;
 mod morse_code;
+mod sum_of_parts;
